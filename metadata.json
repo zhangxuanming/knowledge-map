@@ -1,0 +1,5 @@
+{
+  "name": "Gemini Knowledge Graph",
+  "description": "An interactive, glassmorphic knowledge graph powered by Google Gemini. Explore relationships between concepts with dynamic node generation.",
+  "requestFramePermissions": []
+}
