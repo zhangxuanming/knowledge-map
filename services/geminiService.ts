@@ -11,14 +11,15 @@ const MODEL_NAME = 'gemini-3-flash-preview';
  */
 export const generateRelatedNodes = async (
   sourceTerm: string,
-  mode: SearchMode
+  mode: SearchMode,
+  count: number = 5
 ): Promise<GeneratedItem[]> => {
   const isPrecise = mode === 'precise';
 
   const prompt = `
     Source Term: "${sourceTerm}"
     
-    Task: Generate 5 related terms (child nodes) based on the Source Term.
+    Task: Generate ${count} related terms (child nodes) based on the Source Term.
     
     Mode: ${isPrecise ? 'PRECISE' : 'DEFAULT'}
     

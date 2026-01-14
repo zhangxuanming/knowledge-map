@@ -39,6 +39,7 @@ const App: React.FC = () => {
   const [isLoadingGraph, setIsLoadingGraph] = useState(false);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const [searchMode, setSearchMode] = useState<SearchMode>('default');
+  const [nodeCount, setNodeCount] = useState<number>(5);
 
   const addToGraph = useCallback((sourceNode: GraphNode, newItems: GeneratedItem[]) => {
     setData(prevData => {
@@ -107,7 +108,7 @@ const App: React.FC = () => {
     setExplanation(null);
 
     // Parallel execution: Get children AND get root node explanation separately
-    const childrenPromise = generateRelatedNodes(term, searchMode);
+    const childrenPromise = generateRelatedNodes(term, searchMode, nodeCount);
     const rootExplanationPromise = generateExplanation(term);
 
     try {
@@ -129,7 +130,7 @@ const App: React.FC = () => {
       setIsLoadingGraph(false);
       setLoadingNodeId(null);
     }
-  }, [addToGraph, searchMode]);
+  }, [addToGraph, searchMode, nodeCount]);
 
   // Click -> Show Explanation
   const handleNodeClick = useCallback(async (node: GraphNode) => {
@@ -163,7 +164,7 @@ const App: React.FC = () => {
     setLoadingNodeId(node.id);
     setIsLoadingGraph(true);
     try {
-      const items = await generateRelatedNodes(node.label, searchMode);
+      const items = await generateRelatedNodes(node.label, searchMode, nodeCount);
       addToGraph(node, items);
     } catch (e) {
       console.error(e);
@@ -171,7 +172,7 @@ const App: React.FC = () => {
       setIsLoadingGraph(false);
       setLoadingNodeId(null);
     }
-  }, [addToGraph, searchMode]);
+  }, [addToGraph, searchMode, nodeCount]);
 
   return (
     <div className="w-screen h-screen bg-slate-900 text-white relative font-sans">
@@ -189,6 +190,8 @@ const App: React.FC = () => {
         explanation={explanation}
         isLoadingExplanation={isLoadingExplanation}
         isLoadingGraph={isLoadingGraph}
+        nodeCount={nodeCount}
+        onNodeCountChange={setNodeCount}
       />
       
       {data.nodes.length === 0 && (

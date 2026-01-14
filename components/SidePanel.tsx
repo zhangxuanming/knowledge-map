@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Loader2, Info, Settings2 } from 'lucide-react';
+import { Search, Loader2, Info, Settings2, Hash } from 'lucide-react';
 import { SearchMode } from '../types';
 
 interface SidePanelProps {
@@ -9,6 +9,8 @@ interface SidePanelProps {
   explanation: string | null;
   isLoadingExplanation: boolean;
   isLoadingGraph: boolean;
+  nodeCount: number;
+  onNodeCountChange: (n: number) => void;
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({
@@ -17,7 +19,9 @@ const SidePanel: React.FC<SidePanelProps> = ({
   onModeChange,
   explanation,
   isLoadingExplanation,
-  isLoadingGraph
+  isLoadingGraph,
+  nodeCount,
+  onNodeCountChange
 }) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -55,27 +59,48 @@ const SidePanel: React.FC<SidePanelProps> = ({
           </button>
         </form>
 
-        <div className="flex items-center justify-between bg-slate-800/50 rounded-lg p-1.5 border border-slate-700">
-          <button
-            onClick={() => onModeChange('default')}
-            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${
-              searchMode === 'default' 
-                ? 'bg-cyan-600 text-white shadow-md' 
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Default
-          </button>
-          <button
-            onClick={() => onModeChange('precise')}
-            className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${
-              searchMode === 'precise' 
-                ? 'bg-purple-600 text-white shadow-md' 
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Precise
-          </button>
+        {/* Mode & Count Controls */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between bg-slate-800/50 rounded-lg p-1.5 border border-slate-700">
+            <button
+              onClick={() => onModeChange('default')}
+              className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${
+                searchMode === 'default' 
+                  ? 'bg-cyan-600 text-white shadow-md' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Default
+            </button>
+            <button
+              onClick={() => onModeChange('precise')}
+              className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${
+                searchMode === 'precise' 
+                  ? 'bg-purple-600 text-white shadow-md' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Precise
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between bg-slate-800/50 rounded-lg px-3 py-2 border border-slate-700">
+             <div className="flex items-center gap-2 text-slate-400">
+               <Hash size={14} />
+               <span className="text-xs font-medium">Child Nodes</span>
+             </div>
+             <div className="flex items-center gap-2">
+               <input 
+                 type="range" 
+                 min="1" 
+                 max="15" 
+                 value={nodeCount}
+                 onChange={(e) => onNodeCountChange(parseInt(e.target.value))}
+                 className="w-24 accent-cyan-500 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer"
+               />
+               <span className="text-xs font-bold text-white min-w-[1.5rem] text-right">{nodeCount}</span>
+             </div>
+          </div>
         </div>
       </div>
 
